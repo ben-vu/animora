@@ -2,10 +2,11 @@
 //  RecommendationViewModel.swift
 //  Animora
 //
-//  Created by Benjamin Vu on 5/9/2026.
+//  Created by Benjamin Vu on 6/9/2026.
 //
 
 import Foundation
+import Combine
 
 /// Holds what the viewer chose and which anime is being suggested right now.
 ///
@@ -21,7 +22,7 @@ class RecommendationViewModel: ObservableObject {
 
     /// The remaining suggestions, best first. The viewer only ever sees the first one.
     ///
-    /// I keep the rest rather than throwing them away, so that saying "already seen"
+    /// I keep the rest rather than throwing them away, so that saying 'already seen'
     /// has something to fall back on straight away instead of running another search.
     @Published private(set) var suggestions: [AnimeMatch] = []
 
