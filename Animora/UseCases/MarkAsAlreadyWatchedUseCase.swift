@@ -4,6 +4,7 @@
 //
 //  Created by Benjamin Vu on 4/9/2026.
 //
+
 import Foundation
 
 /// The ways marking an anime as already watched can go wrong.
