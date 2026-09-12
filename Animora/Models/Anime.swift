@@ -8,14 +8,6 @@
 import Foundation
 
 /// One anime series that Animora can recommend.
-///
-/// This is a `struct` because an anime is just a record we read and copy around.
-/// Nothing in the app needs to secretly change an anime while another screen is
-/// looking at it.
-///
-/// There is no `Codable` here yet. Right now the anime come from a fixed list inside
-/// the app, so there is no JSON to decode. When the real API is added later, that is
-/// the point to worry about decoding.
 struct Anime: Identifiable, Hashable {
 
     /// The number that tells this anime apart from every other one.
@@ -30,6 +22,13 @@ struct Anime: Identifiable, Hashable {
     /// How many episodes the whole series has.
     let episodes: Int
 
+    /// How long a single episode runs, in minutes.
+    ///
+    /// Almost all TV anime run about 24 minutes, so on its own this number is not very
+    /// interesting. It matters because it turns an episode count into an amount of
+    /// time, which is the unit the viewer actually thinks in.
+    let episodeMinutes: Int
+
     /// The average score out of 10 that viewers gave it.
     let score: Double
 
@@ -38,6 +37,19 @@ struct Anime: Identifiable, Hashable {
 
     /// Every genre this anime belongs to.
     let genres: [AnimeGenre]
+
+    /// Roughly how many hours it takes to watch the whole series.
+    var totalHours: Double {
+        Double(episodes * episodeMinutes) / 60.0
+    }
+
+    /// The commitment written the way it is shown on screen, like "about 10 hours".
+    var commitmentSummary: String {
+        if totalHours < 1.0 {
+            return "under an hour"
+        }
+        return "about \(Int(totalHours.rounded())) hours"
+    }
 
     /// A small line like "Action • Drama • Fantasy" for the UI to show.
     ///
@@ -53,10 +65,6 @@ struct Anime: Identifiable, Hashable {
 }
 
 /// The genres a viewer can pick from.
-///
-/// I used an `enum` instead of plain text so a typo like "Actoin" can never get into
-/// the app. The list of genres is fixed, and an enum is Swift's way of saying
-/// "it can only be one of these".
 enum AnimeGenre: String, CaseIterable, Identifiable, Hashable {
 
     case action = "Action"

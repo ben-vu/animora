@@ -58,17 +58,23 @@ struct RecommendationRequestView: View {
                     }
                 }
 
-                // MARK: Episode limit
+                // MARK: Time commitment
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("How long?")
+                    Text("How much time have you got?")
                         .font(.headline)
 
-                    Picker("How long?", selection: $viewModel.preferences.episodeLimit) {
-                        ForEach(EpisodeLimit.allCases) { limit in
-                            Text(limit.displayName).tag(limit)
+                    Picker("Time", selection: $viewModel.preferences.timeCommitment) {
+                        ForEach(TimeCommitment.allCases) { commitment in
+                            Text(commitment.displayName).tag(commitment)
                         }
                     }
                     .pickerStyle(.segmented)
+
+                    // Spelling out the hours matters. "A few evenings" is how people
+                    // think, but they still need to know what they are agreeing to.
+                    Text(viewModel.preferences.timeCommitment.explanation)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
 
                 // MARK: Status

@@ -9,12 +9,8 @@ import Foundation
 
 /// The anime list built into the app.
 ///
-/// This is the first of what will be several sources. There will be plans to add a
+/// This is the first of what will be several sources. Later there can be a
 /// `TenraiAnimeRepository` that fetches the same `Anime` values from a web API
-///
-/// I picked a spread of genres, scores and lengths on purpose so the filters actually
-/// have something to do. There are short 12-episode series for someone in a hurry and
-/// long ones for someone who is not.
 class LocalAnimeRepository: AnimeRepository {
 
     /// The anime this source is currently holding.
@@ -38,6 +34,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Attack on Titan",
             synopsis: "Humanity lives behind enormous walls to stay safe from giant humanoid Titans. When the wall is breached, a young soldier joins the fight to take the world back.",
             episodes: 25,
+            episodeMinutes: 24,
             score: 8.5,
             status: .finished,
             genres: [.action, .drama, .fantasy]
@@ -48,6 +45,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Fullmetal Alchemist: Brotherhood",
             synopsis: "Two brothers break a fundamental law of alchemy and pay a terrible price. Their search for a way to restore their bodies pulls them into a national conspiracy.",
             episodes: 64,
+            episodeMinutes: 24,
             score: 9.1,
             status: .finished,
             genres: [.action, .adventure, .drama, .fantasy]
@@ -58,6 +56,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Death Note",
             synopsis: "A high school student finds a notebook that kills anyone whose name is written in it, and begins a long game of wits with the detective hunting him.",
             episodes: 37,
+            episodeMinutes: 24,
             score: 8.6,
             status: .finished,
             genres: [.thriller, .drama, .sciFi]
@@ -68,6 +67,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Your Lie in April",
             synopsis: "A pianist who lost the ability to hear his own playing meets a violinist who pushes him back towards music.",
             episodes: 22,
+            episodeMinutes: 24,
             score: 8.6,
             status: .finished,
             genres: [.drama, .romance, .sliceOfLife]
@@ -78,6 +78,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Haikyu!!",
             synopsis: "A short but determined student joins his high school volleyball club and has to learn to play alongside his former rival.",
             episodes: 25,
+            episodeMinutes: 24,
             score: 8.7,
             status: .finished,
             genres: [.sports, .comedy, .drama]
@@ -88,6 +89,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Spy x Family",
             synopsis: "A spy builds a fake family for a mission, not realising his new daughter reads minds and his new wife is an assassin.",
             episodes: 25,
+            episodeMinutes: 24,
             score: 8.4,
             status: .airing,
             genres: [.comedy, .action, .sliceOfLife]
@@ -98,6 +100,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Steins;Gate",
             synopsis: "A self-styled mad scientist accidentally invents a way to send messages into the past, then has to undo the damage it causes.",
             episodes: 24,
+            episodeMinutes: 24,
             score: 9.0,
             status: .finished,
             genres: [.sciFi, .thriller, .drama]
@@ -108,6 +111,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Mob Psycho 100",
             synopsis: "An immensely powerful young psychic just wants to be normal, and works part time for a con artist who claims to be a spirit medium.",
             episodes: 12,
+            episodeMinutes: 24,
             score: 8.5,
             status: .finished,
             genres: [.action, .comedy, .sliceOfLife]
@@ -118,6 +122,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Violet Evergarden",
             synopsis: "A former child soldier takes a job writing letters for other people and slowly learns what feelings are.",
             episodes: 13,
+            episodeMinutes: 24,
             score: 8.7,
             status: .finished,
             genres: [.drama, .fantasy, .sliceOfLife]
@@ -128,6 +133,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "One Punch Man",
             synopsis: "A hero who can defeat anything with a single punch is mostly just bored, and struggles with the paperwork of official hero ranking.",
             episodes: 12,
+            episodeMinutes: 24,
             score: 8.5,
             status: .finished,
             genres: [.action, .comedy, .sciFi]
@@ -138,6 +144,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Toradora!",
             synopsis: "Two classmates agree to help each other win over their respective crushes, which goes about as well as expected.",
             episodes: 25,
+            episodeMinutes: 24,
             score: 8.1,
             status: .finished,
             genres: [.romance, .comedy, .drama]
@@ -148,6 +155,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Demon Slayer",
             synopsis: "After his family is killed and his sister turned into a demon, a young man joins the corps that hunts them.",
             episodes: 26,
+            episodeMinutes: 24,
             score: 8.5,
             status: .airing,
             genres: [.action, .fantasy, .adventure]
@@ -158,6 +166,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Run with the Wind",
             synopsis: "A group of students who mostly cannot run are talked into entering one of Japan's toughest relay marathons.",
             episodes: 23,
+            episodeMinutes: 24,
             score: 8.3,
             status: .finished,
             genres: [.sports, .drama, .sliceOfLife]
@@ -168,6 +177,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Erased",
             synopsis: "A man who involuntarily travels back in time is sent to his childhood, where he has a chance to stop a kidnapping.",
             episodes: 12,
+            episodeMinutes: 24,
             score: 8.3,
             status: .finished,
             genres: [.thriller, .drama, .sciFi]
@@ -178,6 +188,7 @@ class LocalAnimeRepository: AnimeRepository {
             title: "Vinland Saga",
             synopsis: "A boy raised among Viking mercenaries chases revenge for his father, and slowly starts to ask what it is all for.",
             episodes: 24,
+            episodeMinutes: 24,
             score: 8.8,
             status: .finished,
             genres: [.action, .adventure, .drama]

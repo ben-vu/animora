@@ -9,9 +9,12 @@ import SwiftUI
 
 /// Screen 3: one suggestion at a time.
 ///
-/// The viewer sees a single anime with the reasons it was picked, and has exactly two options.
+/// The whole app comes down to this screen. The viewer sees a single anime with the
+/// reasons it was picked, and has exactly two answers: watch it, or say they've already
+/// seen it. One choice is much easier to make than a list of five, which is the problem
+/// this app exists to solve.
 ///
-/// Saying 'already seen' writes the anime to the watch history, so it is gone from this
+/// Saying "already seen" writes the anime to the watch history, so it is gone from this
 /// search and from every search after it.
 struct SuggestionView: View {
 
@@ -55,6 +58,7 @@ struct SuggestionView: View {
         HStack(spacing: 26) {
             fact(label: "Rating", value: String(format: "★ %.1f", match.anime.score))
             fact(label: "Episodes", value: "\(match.anime.episodes)")
+            fact(label: "Total", value: match.anime.commitmentSummary)
             fact(label: "Status", value: match.anime.status.displayName)
         }
 

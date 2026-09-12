@@ -9,15 +9,15 @@ import Foundation
 
 /// The ways finding recommendations can go wrong.
 ///
-/// I split 'nothing matched' into separate cases on purpose. Telling someone
-/// "no results" is useless, because it does not tell them which control to change.
+/// Each case below knows which filter emptied the list, so the message can point at
+/// the fix and quote a real number.
 enum FindAnimeRecommendationsError: LocalizedError, Equatable {
 
     case noAnimeInChosenGenres(genreNames: String)
     case everythingAlreadyWatched(genreNames: String)
     case noFinishedSeriesAvailable
     case noAiringSeriesAvailable
-    case episodeLimitTooShort(shortestAvailable: Int)
+    case timeBudgetTooSmall(shortestHours: Int)
 
     var errorDescription: String? {
         switch self {
@@ -34,32 +34,26 @@ enum FindAnimeRecommendationsError: LocalizedError, Equatable {
         case .noAiringSeriesAvailable:
             return "Nothing we found is currently airing. Set Status to Any to include series that have already finished."
 
-        case .episodeLimitTooShort(let shortestAvailable):
-            return "Everything we found is longer than your limit. The shortest one is \(shortestAvailable) episodes, so try raising your episode limit."
+        case .timeBudgetTooSmall(let shortestHours):
+            return "Everything we found asks for more time than that. The shortest is about \(shortestHours) hours, so try allowing a bit longer."
         }
     }
 }
 
 /// Takes what the viewer is in the mood for and returns a short ranked list of anime.
 ///
-/// **The business operation:** this is the heart of Animora. It is what happens when
-/// the viewer taps "Find my anime".
-///
-/// **The business rules it protects:**
+/// **The business rules:**
 /// 1. An anime must be in at least one genre the viewer picked.
 /// 2. An anime the viewer has already marked as watched is never suggested again.
 /// 3. It must have the airing status they asked for.
-/// 4. It must fit inside their episode limit.
+/// 4. It must fit inside the time the viewer said they have.
 /// 5. Every result comes with at least one reason, quoting real numbers.
 ///
-/// **On how many results come back.** This returns *everything* that passed the rules,
-/// ranked best first. The viewer is only ever shown the first one — the app suggests a
+/// The viewer is only ever shown the first one. The app suggests a
 /// single anime at a time, because one decision is far easier to make than a list of
 /// five. The rest are kept so that "already seen it" can show the next one instantly
 /// instead of running the whole search again.
 ///
-/// This is a `struct` because it holds no state of its own. It takes a request in and
-/// gives an answer back — two copies would behave identically.
 struct FindAnimeRecommendationsUseCase {
 
     /// Where the anime come from. This is the protocol, not a specific list or API,
@@ -147,17 +141,17 @@ struct FindAnimeRecommendationsUseCase {
             }
         }
 
-        // Rule 4: now the episode limit.
+        // Rule 4: now the time budget.
         var shortEnough: [Anime] = []
-        if let maximumEpisodes = preferences.episodeLimit.maximumEpisodes {
-            for anime in rightStatus where anime.episodes <= maximumEpisodes {
+        if let maximumHours = preferences.timeCommitment.maximumHours {
+            for anime in rightStatus where anime.totalHours <= maximumHours {
                 shortEnough.append(anime)
             }
             if shortEnough.isEmpty {
                 // Telling them the shortest one we have is what makes this useful —
                 // now they know how far to move the control.
-                throw FindAnimeRecommendationsError.episodeLimitTooShort(
-                    shortestAvailable: shortestLength(in: rightStatus)
+                throw FindAnimeRecommendationsError.timeBudgetTooSmall(
+                    shortestHours: shortestCommitment(in: rightStatus)
                 )
             }
         } else {
@@ -279,9 +273,11 @@ struct FindAnimeRecommendationsUseCase {
             reasons.append("Rated \(scoreText) out of 10")
         }
 
-        // Reason 3: the real episode count against the limit they set.
-        if let maximumEpisodes = preferences.episodeLimit.maximumEpisodes {
-            reasons.append("\(anime.episodes) episodes, inside your limit of \(maximumEpisodes)")
+        // Reason 3: the real time commitment against the budget they set.
+        // Quoting both the hours and the episode count means the viewer can judge it
+        // in the unit they think in, and still knows what they are signing up for.
+        if preferences.timeCommitment.maximumHours != nil {
+            reasons.append("\(anime.episodes) episodes, \(anime.commitmentSummary) in total")
         }
 
         // Reason 4: what the status means for them, not just that it matched.
@@ -297,17 +293,17 @@ struct FindAnimeRecommendationsUseCase {
         return reasons
     }
 
-    /// The shortest series in a list, used to tell the viewer how far to raise their
-    /// episode limit.
-    private func shortestLength(in anime: [Anime]) -> Int {
+    /// The smallest time commitment in a list, in whole hours, used to tell the
+    /// viewer how far to move the control.
+    private func shortestCommitment(in anime: [Anime]) -> Int {
         // Starting from the first anime rather than a huge made-up number is easier to
         // read and cannot be wrong.
-        guard var shortest = anime.first?.episodes else { return 0 }
+        guard var shortest = anime.first?.totalHours else { return 0 }
         for item in anime {
-            if item.episodes < shortest {
-                shortest = item.episodes
+            if item.totalHours < shortest {
+                shortest = item.totalHours
             }
         }
-        return shortest
+        return Int(shortest.rounded())
     }
 }

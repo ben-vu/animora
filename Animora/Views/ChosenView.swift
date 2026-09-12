@@ -31,7 +31,7 @@ struct ChosenView: View {
                     .bold()
                     .multilineTextAlignment(.center)
 
-                Text("\(chosen.anime.episodes) episodes · rated \(String(format: "%.1f", chosen.anime.score))")
+                Text("\(chosen.anime.episodes) episodes · \(chosen.anime.commitmentSummary) · rated \(String(format: "%.1f", chosen.anime.score))")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
