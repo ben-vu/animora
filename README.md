@@ -1,8 +1,8 @@
 # Animora
 
-A personal anime recommendation app for the iOS platform, which suggests one anime at a time based on what the viewer is in the mood for and explains why each suggestion was made. This app is designed for the iPhone running iOS 17 or higher.
+A personal anime recommendation app for the iOS platform, which suggests one anime at a time based on what the viewer is in the mood for and explains why each suggestion was made. This app is designed for the iPhone running iOS 26 or higher.
 
-Animora is built for people new to anime who are wary of committing to something long. Rather than presenting a long list to scroll through, it asks about genre, how much time you actually have, and whether you mind a series still airing, then offers a single anime with the reasons it was picked. If the viewer has already seen that one, they can say so and the next-best suggestion takes its place. Anything marked as already seen is remembered, so it is never suggested again.
+Animora is specifically aimed for people new to anime who are wary of committing to something long. Rather than presenting a long list to scroll through, it asks about genre, how much time you actually have, and whether you mind a series still airing, then offers a single anime with the reasons it was picked. If the viewer has already seen that one, they can say so and the next-best suggestion takes its place. Anything marked as already seen is remembered, so it is never suggested again.
 
 All version control and commit history for Animora can be found in this [GitHub repository](https://github.com/ben-vu/animora).
 
@@ -20,7 +20,7 @@ All version control and commit history for Animora can be found in this [GitHub 
 * Combine framework (Swift), for `ObservableObject` in the view model layer
 * Swift Testing framework (Swift), for the unit test target
 
-This project has no third-party package dependencies and makes no network requests. The anime catalogue is held locally in `LocalAnimeRepository`, behind the `AnimeRepository` protocol, so a networked source can be added later without changing any layer above it.
+This project has no third-party package dependencies and makes no network requests (for now). The anime catalogue is held locally in `LocalAnimeRepository`, behind the `AnimeRepository` protocol, so a networked source can be added later without changing any layer above it.
 
 ## Minimum Deployment
 
