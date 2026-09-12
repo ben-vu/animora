@@ -16,7 +16,7 @@ All version control and commit history for Animora can be found in this [GitHub 
 
 ## Dependencies
 
-* Swift/SwiftUI 5.9 and iOS 17+ language features
+* Swift/SwiftUI 5.9 and iOS 26+ language features
 * Combine framework (Swift), for `ObservableObject` in the view model layer
 * Swift Testing framework (Swift), for the unit test target
 
@@ -24,7 +24,7 @@ This project has no third-party package dependencies and makes no network reques
 
 ## Minimum Deployment
 
-The minimum deployment of this project is iOS 17.0.
+The minimum deployment of this project is iOS 26.2.
 
 The unit tests use the Swift Testing framework, which requires **Xcode 16 or later** to build and run.
 
@@ -33,7 +33,7 @@ The unit tests use the Swift Testing framework, which requires **Xcode 16 or lat
 Animora requires no API key, no account and no configuration. All data is bundled with the app, so it runs immediately after cloning. The steps to get it running are as follows:
 
 1. Clone the repository and open `Animora.xcodeproj` in Xcode 16 or later.
-2. Select any iPhone simulator running iOS 17.0 or higher from the scheme selector at the top of the window.
+2. Select any iPhone simulator running iOS 26.2 or higher from the scheme selector at the top of the window.
 3. Press Run (`⌘R`) to build and launch the app.
 4. To run the unit tests, press `⌘U`. All 13 tests should pass without a network connection.
 
