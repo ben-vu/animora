@@ -141,7 +141,7 @@ struct SuggestionView: View {
                 .font(.title3)
                 .bold()
 
-            Text("You've already watched everything we found for this request. Try a different genre or a longer episode limit.")
+            Text("You've already watched everything we found for this request. Try another genre, or allow a bit more time.")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

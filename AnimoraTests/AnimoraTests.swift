@@ -13,34 +13,41 @@ import Testing
 
 /// A small fake repository used by the tests.
 ///
-/// This is the payoff from making `AnimeRepository` a protocol. The tests hand the Use
-/// Cases a tiny list written by hand, so I can work out the right answer myself and
-/// check against it. A test should only fail when a rule breaks, not when I add a new
-/// anime to the app.
+/// The tests hand the Use Cases a tiny list written by hand, so I can work out the
+/// right answer myself and check against it. A test should only fail when a rule breaks,
+/// not when I add a new anime to the app.
+///
+/// Every fixture runs approxmiately 24 minutes an episode, which is what almost all TV anime do.
+/// That keeps the hours easy to work out by hand: 15 episodes is exactly 6 hours, 12 episodes
+/// is 4.8, 24 episodes is 9.6, and 60 episodes is 24.
 class TestAnimeRepository: AnimeRepository {
 
     private(set) var anime: [Anime] = []
 
     init() { anime = load() }
 
+    /// Exactly 6.0 hours, which is the boundary of "A few evenings".
     static let shortAction = Anime(
         id: 101, title: "Short Action Show", synopsis: "For testing.",
-        episodes: 12, score: 8.0, status: .finished, genres: [.action]
+        episodes: 15, episodeMinutes: 24, score: 8.0, status: .finished, genres: [.action]
     )
 
+    /// 24 hours, past every budget the viewer can choose.
     static let longAction = Anime(
         id: 102, title: "Long Action Epic", synopsis: "For testing.",
-        episodes: 60, score: 9.0, status: .finished, genres: [.action]
+        episodes: 60, episodeMinutes: 24, score: 9.0, status: .finished, genres: [.action]
     )
 
+    /// 4.8 hours, and deliberately the only poorly rated one.
     static let lowRatedAction = Anime(
         id: 103, title: "Low Rated Action Show", synopsis: "For testing.",
-        episodes: 12, score: 6.4, status: .finished, genres: [.action]
+        episodes: 12, episodeMinutes: 24, score: 6.4, status: .finished, genres: [.action]
     )
 
+    /// 9.6 hours, so a romance request on a short budget has nothing to offer.
     static let romanceOnly = Anime(
         id: 104, title: "Romance Only Show", synopsis: "For testing.",
-        episodes: 24, score: 8.5, status: .finished, genres: [.romance]
+        episodes: 24, episodeMinutes: 24, score: 8.5, status: .finished, genres: [.romance]
     )
 
     func load() -> [Anime] {
@@ -55,11 +62,11 @@ class TestAnimeRepository: AnimeRepository {
 
 /// Builds a request without repeating the same lines in every test.
 func makePreferences(genres: Set<AnimeGenre> = [],
-                     episodeLimit: EpisodeLimit = .any,
+                     time: TimeCommitment = .any,
                      status: AnimeStatusPreference = .any) -> AnimePreferences {
     var preferences = AnimePreferences()
     preferences.genres = genres
-    preferences.episodeLimit = episodeLimit
+    preferences.timeCommitment = time
     preferences.status = status
     return preferences
 }
@@ -76,8 +83,10 @@ struct FindAnimeRecommendationsUseCaseTests {
     @Test func bestMatchFirst() throws {
         let matches = try makeUseCase().execute(preferences: makePreferences(genres: [.action]))
 
-        // Three action anime qualify, and the strongest is offered first.
+        // Three action anime qualify, and the strongest is offered first. All three match
+        // the one genre asked for, so the 9.0 rating is what puts the long epic on top.
         #expect(matches.count == 3)
+        #expect(matches[0].anime.id == TestAnimeRepository.longAction.id)
         #expect(matches[0].matchPercentage >= matches[1].matchPercentage)
         #expect(matches[1].matchPercentage >= matches[2].matchPercentage)
     }
@@ -90,14 +99,17 @@ struct FindAnimeRecommendationsUseCaseTests {
         #expect(!matches.contains { $0.anime.id == TestAnimeRepository.romanceOnly.id })
     }
 
-    @Test func episodeLimitIsInclusive() throws {
-        // The short action show has exactly 12 episodes and the limit is 12.
-        // "Under 12" has to include 12 itself, or the boundary is off by one.
+    @Test func timeBudgetIsInclusive() throws {
+        // The short action show is exactly 6.0 hours and "A few evenings" allows 6.0.
+        // A budget of 6 hours has to include something that takes 6 hours, or the
+        // boundary is off and the viewer loses a title they could have watched.
         let matches = try makeUseCase().execute(
-            preferences: makePreferences(genres: [.action], episodeLimit: .under12)
+            preferences: makePreferences(genres: [.action], time: .aFewEvenings)
         )
 
         #expect(matches.contains { $0.anime.id == TestAnimeRepository.shortAction.id })
+        // The 24-hour epic is the only action title that should be dropped.
+        #expect(matches.count == 2)
     }
 
     @Test func errorNamesEmptyGenre() {
@@ -108,11 +120,11 @@ struct FindAnimeRecommendationsUseCaseTests {
     }
 
     @Test func errorQuotesShortestSeries() {
-        // The only romance anime is 24 episodes, so a viewer asking for under 12 needs
-        // to be told that number — otherwise they don't know how far to move the control.
-        #expect(throws: FindAnimeRecommendationsError.episodeLimitTooShort(shortestAvailable: 24)) {
+        // The only romance anime runs 9.6 hours, so a viewer with a 6 hour budget needs
+        // to be told that number, otherwise they don't know how far to move the control.
+        #expect(throws: FindAnimeRecommendationsError.timeBudgetTooSmall(shortestHours: 10)) {
             try makeUseCase().execute(
-                preferences: makePreferences(genres: [.romance], episodeLimit: .under12)
+                preferences: makePreferences(genres: [.romance], time: .aFewEvenings)
             )
         }
     }
@@ -125,7 +137,7 @@ struct FindAnimeRecommendationsUseCaseTests {
             .everythingAlreadyWatched(genreNames: "Action"),
             .noFinishedSeriesAvailable,
             .noAiringSeriesAvailable,
-            .episodeLimitTooShort(shortestAvailable: 24)
+            .timeBudgetTooSmall(shortestHours: 10)
         ]
 
         for error in allErrors {
@@ -146,6 +158,18 @@ struct FindAnimeRecommendationsUseCaseTests {
         for reason in lowRated.reasons {
             #expect(!reason.contains("high"), "A 6.4 anime shouldn't be called high: \(reason)")
         }
+    }
+
+    @Test func reasonsQuoteTheCommitmentInHours() throws {
+        // The viewer set a budget, so the reason has to say what this one actually costs.
+        // Both units appear: hours is what they chose in, episodes is what they will see
+        // on any other site.
+        let matches = try makeUseCase().execute(
+            preferences: makePreferences(genres: [.action], time: .aFewEvenings)
+        )
+        let short = try #require(matches.first { $0.anime.id == TestAnimeRepository.shortAction.id })
+
+        #expect(short.reasons.contains("15 episodes, about 6 hours in total"))
     }
 }
 
