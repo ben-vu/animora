@@ -109,7 +109,7 @@ struct SuggestionView: View {
             // suggested to them again.
             viewModel.markCurrentAsAlreadyWatched()
         } label: {
-            Text("Already seen it — show me another")
+            Text("Already seen it? Show me another one")
                 .font(.headline)
                 .foregroundColor(.animoraPurple)
                 .frame(maxWidth: .infinity)
