@@ -9,8 +9,9 @@ import Foundation
 
 /// The ways marking an anime as already watched can go wrong.
 ///
-/// When they tap
-/// "Already watched, pick another".
+/// The viewer meets both of these on the suggestion screen, the moment they tap
+/// "Already watched, pick another". Neither is their fault, so each message says what
+/// happened and what to press next rather than reporting a failure.
 enum MarkAsAlreadyWatchedError: LocalizedError, Equatable {
 
     /// The anime is not in the catalogue, so there is nothing to record.

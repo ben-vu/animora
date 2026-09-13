@@ -11,6 +11,13 @@ import Foundation
 ///
 /// This is the first of what will be several sources. Later there can be a
 /// `TenraiAnimeRepository` that fetches the same `Anime` values from a web API
+///
+/// This is a `class` rather than a `struct` even though the catalogue never changes
+/// after `init`. Both repositories are held by reference so that every Use Case in a
+/// search is reading the same source, which `InMemoryWatchHistoryRepository` genuinely
+/// needs. A networked catalogue would need it too, since it would cache what it had
+/// fetched. Keeping both sides of the protocol the same shape means swapping this for
+/// that source changes nothing above it.
 class LocalAnimeRepository: AnimeRepository {
 
     /// The anime this source is currently holding.

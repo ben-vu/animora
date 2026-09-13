@@ -57,7 +57,7 @@ struct AnimePreferences: Hashable {
 enum TimeCommitment: CaseIterable, Identifiable, Hashable {
 
     case aFewEvenings
-    case acoupleOfWeeks
+    case aCoupleOfWeeks
     case any
 
     var id: String { displayName }
@@ -65,7 +65,7 @@ enum TimeCommitment: CaseIterable, Identifiable, Hashable {
     var displayName: String {
         switch self {
         case .aFewEvenings: return "A few evenings"
-        case .acoupleOfWeeks: return "A couple of weeks"
+        case .aCoupleOfWeeks: return "A couple of weeks"
         case .any: return "However long"
         }
     }
@@ -75,7 +75,7 @@ enum TimeCommitment: CaseIterable, Identifiable, Hashable {
     var explanation: String {
         switch self {
         case .aFewEvenings: return "Under 6 hours in total"
-        case .acoupleOfWeeks: return "Under 15 hours in total"
+        case .aCoupleOfWeeks: return "Under 15 hours in total"
         case .any: return "Length doesn't matter"
         }
     }
@@ -87,7 +87,7 @@ enum TimeCommitment: CaseIterable, Identifiable, Hashable {
     var maximumHours: Double? {
         switch self {
         case .aFewEvenings: return 6.0
-        case .acoupleOfWeeks: return 15.0
+        case .aCoupleOfWeeks: return 15.0
         case .any: return nil
         }
     }

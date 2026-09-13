@@ -17,7 +17,7 @@ import Testing
 /// right answer myself and check against it. A test should only fail when a rule breaks,
 /// not when I add a new anime to the app.
 ///
-/// Every fixture runs approxmiately 24 minutes an episode, which is what almost all TV anime do.
+/// Every fixture runs approximately 24 minutes an episode, which is what almost all TV anime do.
 /// That keeps the hours easy to work out by hand: 15 episodes is exactly 6 hours, 12 episodes
 /// is 4.8, 24 episodes is 9.6, and 60 episodes is 24.
 class TestAnimeRepository: AnimeRepository {
@@ -80,7 +80,7 @@ struct FindAnimeRecommendationsUseCaseTests {
         FindAnimeRecommendationsUseCase(repository: TestAnimeRepository(), watchHistory: history)
     }
 
-    @Test func bestMatchFirst() throws {
+    @Test func suggestions_rankedBestFirst() throws {
         let matches = try makeUseCase().execute(preferences: makePreferences(genres: [.action]))
 
         // Three action anime qualify, and the strongest is offered first. All three match
@@ -91,7 +91,7 @@ struct FindAnimeRecommendationsUseCaseTests {
         #expect(matches[1].matchPercentage >= matches[2].matchPercentage)
     }
 
-    @Test func wrongGenreExcluded() throws {
+    @Test func search_excludesUnpickedGenres() throws {
         // A viewer who asked for Action should never be shown the romance series,
         // however well rated it is.
         let matches = try makeUseCase().execute(preferences: makePreferences(genres: [.action]))
@@ -99,7 +99,7 @@ struct FindAnimeRecommendationsUseCaseTests {
         #expect(!matches.contains { $0.anime.id == TestAnimeRepository.romanceOnly.id })
     }
 
-    @Test func timeBudgetIsInclusive() throws {
+    @Test func search_includesAnime_atExactlyTheBudget() throws {
         // The short action show is exactly 6.0 hours and "A few evenings" allows 6.0.
         // A budget of 6 hours has to include something that takes 6 hours, or the
         // boundary is off and the viewer loses a title they could have watched.
@@ -112,14 +112,14 @@ struct FindAnimeRecommendationsUseCaseTests {
         #expect(matches.count == 2)
     }
 
-    @Test func errorNamesEmptyGenre() {
+    @Test func search_fails_whenGenreHasNothing() {
         // There are no sports anime in the test repository at all.
         #expect(throws: FindAnimeRecommendationsError.noAnimeInChosenGenres(genreNames: "Sports")) {
             try makeUseCase().execute(preferences: makePreferences(genres: [.sports]))
         }
     }
 
-    @Test func errorQuotesShortestSeries() {
+    @Test func search_fails_whenBudgetTooSmall() {
         // The only romance anime runs 9.6 hours, so a viewer with a 6 hour budget needs
         // to be told that number, otherwise they don't know how far to move the control.
         #expect(throws: FindAnimeRecommendationsError.timeBudgetTooSmall(shortestHours: 10)) {
@@ -129,7 +129,7 @@ struct FindAnimeRecommendationsUseCaseTests {
         }
     }
 
-    @Test func errorsGiveNextStep() {
+    @Test func searchErrors_nameAControlToChange() {
         // Section 3 of the brief asks what the person can do next, so every message
         // has to contain an actual instruction rather than just naming the problem.
         let allErrors: [FindAnimeRecommendationsError] = [
@@ -147,7 +147,7 @@ struct FindAnimeRecommendationsUseCaseTests {
         }
     }
 
-    @Test func reasonsUseRealNumbers() throws {
+    @Test func reasons_quoteTheRealRating() throws {
         let matches = try makeUseCase().execute(preferences: makePreferences(genres: [.action]))
         let lowRated = try #require(matches.first { $0.anime.id == TestAnimeRepository.lowRatedAction.id })
 
@@ -160,7 +160,7 @@ struct FindAnimeRecommendationsUseCaseTests {
         }
     }
 
-    @Test func reasonsQuoteTheCommitmentInHours() throws {
+    @Test func reasons_quoteHoursAndEpisodes() throws {
         // The viewer set a budget, so the reason has to say what this one actually costs.
         // Both units appear: hours is what they chose in, episodes is what they will see
         // on any other site.
@@ -188,7 +188,7 @@ struct AlreadyWatchedTests {
         )
     }
 
-    @Test func seenStopsSuggestions() throws {
+    @Test func search_excludesAnime_onceMarkedWatched() throws {
         let (search, markSeen) = makeUseCases()
 
         let before = try search.execute(preferences: makePreferences(genres: [.action]))
@@ -203,7 +203,7 @@ struct AlreadyWatchedTests {
         #expect(after.count == before.count - 1)
     }
 
-    @Test func allSeenNamesGenre() throws {
+    @Test func search_fails_whenGenreAllWatched() throws {
         let (search, markSeen) = makeUseCases()
 
         try markSeen.execute(animeID: TestAnimeRepository.shortAction.id)
@@ -216,7 +216,7 @@ struct AlreadyWatchedTests {
         }
     }
 
-    @Test func doubleMarkRejected() throws {
+    @Test func markWatched_fails_whenAlreadyMarked() throws {
         let (_, markSeen) = makeUseCases()
         try markSeen.execute(animeID: TestAnimeRepository.shortAction.id)
 
@@ -226,7 +226,7 @@ struct AlreadyWatchedTests {
         }
     }
 
-    @Test func unknownAnimeRejected() {
+    @Test func markWatched_fails_whenNotInCatalogue() {
         // An id that is not in the catalogue would put a broken row on the watch
         // history, so it is refused rather than saved.
         let (_, markSeen) = makeUseCases()
@@ -247,7 +247,7 @@ struct ChooseAnimeUseCaseTests {
         AnimeMatch(anime: anime, matchPercentage: 90, reasons: ["A reason"])
     }
 
-    @Test func choosingOnScreenWorks() throws {
+    @Test func choose_succeeds_forTheSuggestionOnScreen() throws {
         // The normal case: the viewer taps "I'll watch this" on the anime in front
         // of them.
         let match = makeMatch(TestAnimeRepository.shortAction)
@@ -257,7 +257,7 @@ struct ChooseAnimeUseCaseTests {
         #expect(chosen.id == match.id)
     }
 
-    @Test func staleChoiceRejected() {
+    @Test func choose_fails_forAStaleSuggestion() {
         // A tap arriving for an anime the app has already moved past. Letting it
         // through would commit the viewer to something they are no longer looking at.
         let onScreen = makeMatch(TestAnimeRepository.shortAction)

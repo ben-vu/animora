@@ -9,7 +9,7 @@ import SwiftUI
 
 /// Screen 1: the home screen.
 ///
-/// This screen does one job, which is toget the viewer into the flow quickly. The whole point is a
+/// This screen does one job, which is to get the viewer into the flow quickly. The whole point is a
 /// decision in under a minute, so there is nothing here to read or scroll past.
 struct HomeView: View {
 
