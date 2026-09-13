@@ -1,14 +1,14 @@
 # Animora
 
-A personal anime recommendation app for the iOS platform, which suggests one anime at a time based on what the viewer is in the mood for and explains why each suggestion was made. This app is designed for the iPhone running iOS 26 or higher.
+A personal anime recommendation app for iOS that suggests one anime at a time based on what the viewer is in the mood for and explains why each suggestion was made. This app is designed for the iPhone running iOS 26 or higher.
 
 Animora is specifically aimed at people new to anime who are wary of committing to something long. Rather than presenting a long list to scroll through, it asks about genre, how much time you actually have, and whether you mind a series still airing, then offers a single anime with the reasons it was picked. If the viewer has already seen that one, they can say so and the next-best suggestion takes its place. Anything marked as already seen is remembered, so it is never suggested again.
 
-All version control and commit history for Animora can be found in this [GitHub repository](https://github.com/ben-vu/animora).
+You can find all version control and commit history for Animora in this [GitHub repository](https://github.com/ben-vu/animora).
 
 ## Core Functionalities
 
-* Building a recommendation request from genre, available viewing time, and airing status,
+* Building a recommendation request from genre, available viewing time, and airing status
 * Filtering by total hours rather than episode count, since someone new to anime knows what 'about 6 hours' costs them but not what '12 episodes' means,
 * Receiving one ranked anime suggestion at a time, each with plain-English reasons quoting its real rating and episode count,
 * Marking a suggestion as already watched so it is excluded from every future search,
