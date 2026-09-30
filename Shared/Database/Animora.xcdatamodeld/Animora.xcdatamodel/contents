@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="25A354" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FriendPickEntity" representedClassName="FriendPickEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="couldNotBeFound" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="friendName" optional="YES" attributeType="String"/>
+        <attribute name="pickID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="receivedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sharedLink" optional="YES" attributeType="String"/>
+        <attribute name="sharedTitle" optional="YES" attributeType="String"/>
+        <relationship name="anime" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SavedAnimeEntity" inverseName="friendPicks" inverseEntity="SavedAnimeEntity"/>
+    </entity>
+    <entity name="SavedAnimeEntity" representedClassName="SavedAnimeEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="animeID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="episodeMinutes" attributeType="Integer 64" defaultValueString="24" usesScalarValueType="YES"/>
+        <attribute name="episodes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="genresText" optional="YES" attributeType="String"/>
+        <attribute name="imageLink" optional="YES" attributeType="String"/>
+        <attribute name="savedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="score" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="statusText" optional="YES" attributeType="String"/>
+        <attribute name="synopsis" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="friendPicks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FriendPickEntity" inverseName="anime" inverseEntity="FriendPickEntity"/>
+        <relationship name="watchedRecord" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WatchedAnimeEntity" inverseName="anime" inverseEntity="WatchedAnimeEntity"/>
+        <relationship name="watchlistEntry" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WatchlistEntryEntity" inverseName="anime" inverseEntity="WatchlistEntryEntity"/>
+    </entity>
+    <entity name="WatchedAnimeEntity" representedClassName="WatchedAnimeEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="markedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="reasonText" optional="YES" attributeType="String"/>
+        <relationship name="anime" maxCount="1" deletionRule="Nullify" destinationEntity="SavedAnimeEntity" inverseName="watchedRecord" inverseEntity="SavedAnimeEntity"/>
+    </entity>
+    <entity name="WatchlistEntryEntity" representedClassName="WatchlistEntryEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="episodesWatched" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="anime" maxCount="1" deletionRule="Nullify" destinationEntity="SavedAnimeEntity" inverseName="watchlistEntry" inverseEntity="SavedAnimeEntity"/>
+    </entity>
+</model>
