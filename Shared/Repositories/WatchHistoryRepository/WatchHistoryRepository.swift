@@ -2,7 +2,7 @@
 //  WatchHistoryRepository.swift
 //  Animora
 //
-//  Created by Benjamin Vu on 3/9/2026.
+//  Created by Benjamin Vu on 26/9/2026.
 //
 
 import Foundation
@@ -11,14 +11,18 @@ import Foundation
 ///
 /// This is a second repository alongside `AnimeRepository`, following the same shape.
 /// Keeping it behind a protocol means the Use Cases do not care whether the history
-/// is held in memory, written to a file, or stored with SwiftData later on.
+/// is held in memory for the tests or saved with Core Data in the real app.
 protocol WatchHistoryRepository {
 
-    /// Every anime the viewer has marked as already watched.
+    /// Every anime the viewer has marked as watched, newest first.
     var watchedRecords: [WatchedAnimeRecord] { get }
 
     /// Saves one new record.
-    func add(_ record: WatchedAnimeRecord)
+    ///
+    /// The whole anime is passed in as well as the record, because the Core Data
+    /// version keeps a copy of the anime's details. That way the history screen can
+    /// still show it even with no internet.
+    func add(_ record: WatchedAnimeRecord, anime: Anime)
 
     /// Whether this anime has already been marked.
     func hasWatched(animeID: Int) -> Bool

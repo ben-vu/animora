@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A1B2C3D40000000000000005 /* AnimoraWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* AnimoraWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A1B2C3D40000000000000006 /* AnimoraShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* AnimoraShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D13C97733050010700B7EAAC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,13 +26,61 @@
 			remoteGlobalIDString = D13C97643050010600B7EAAC;
 			remoteInfo = Animora;
 		};
+		A1B2C3D40000000000000008 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D13C975D3050010600B7EAAC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1B2C3D40000000000000001;
+			remoteInfo = AnimoraWidgetExtension;
+		};
+		A1B2C3D40000000000000009 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D13C975D3050010600B7EAAC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1B2C3D40000000000000002;
+			remoteInfo = AnimoraShareExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A1B2C3D40000000000000007 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A1B2C3D40000000000000005 /* AnimoraWidgetExtension.appex in Embed Foundation Extensions */,
+				A1B2C3D40000000000000006 /* AnimoraShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D13C97653050010600B7EAAC /* Animora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Animora.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D13C97723050010700B7EAAC /* AnimoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnimoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D13C977C3050010700B7EAAC /* AnimoraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnimoraUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D40000000000000003 /* AnimoraWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AnimoraWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D40000000000000004 /* AnimoraShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AnimoraShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A1B2C3D4000000000000000F /* Exceptions for "AnimoraWidget" folder in "AnimoraWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A1B2C3D40000000000000001 /* AnimoraWidgetExtension */;
+		};
+		A1B2C3D40000000000000010 /* Exceptions for "AnimoraShare" folder in "AnimoraShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A1B2C3D40000000000000002 /* AnimoraShareExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D13C97673050010600B7EAAC /* Animora */ = {
@@ -43,6 +96,27 @@
 		D13C977F3050010700B7EAAC /* AnimoraUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AnimoraUITests;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4000000000000000C /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4000000000000000D /* AnimoraWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A1B2C3D4000000000000000F /* Exceptions for "AnimoraWidget" folder in "AnimoraWidgetExtension" target */,
+			);
+			path = AnimoraWidget;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4000000000000000E /* AnimoraShare */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A1B2C3D40000000000000010 /* Exceptions for "AnimoraShare" folder in "AnimoraShareExtension" target */,
+			);
+			path = AnimoraShare;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +143,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1B2C3D40000000000000012 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D40000000000000015 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -76,6 +164,9 @@
 			isa = PBXGroup;
 			children = (
 				D13C97673050010600B7EAAC /* Animora */,
+				A1B2C3D4000000000000000C /* Shared */,
+				A1B2C3D4000000000000000D /* AnimoraWidget */,
+				A1B2C3D4000000000000000E /* AnimoraShare */,
 				D13C97753050010700B7EAAC /* AnimoraTests */,
 				D13C977F3050010700B7EAAC /* AnimoraUITests */,
 				D13C97663050010600B7EAAC /* Products */,
@@ -88,6 +179,8 @@
 				D13C97653050010600B7EAAC /* Animora.app */,
 				D13C97723050010700B7EAAC /* AnimoraTests.xctest */,
 				D13C977C3050010700B7EAAC /* AnimoraUITests.xctest */,
+				A1B2C3D40000000000000003 /* AnimoraWidgetExtension.appex */,
+				A1B2C3D40000000000000004 /* AnimoraShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,13 +195,17 @@
 				D13C97613050010600B7EAAC /* Sources */,
 				D13C97623050010600B7EAAC /* Frameworks */,
 				D13C97633050010600B7EAAC /* Resources */,
+				A1B2C3D40000000000000007 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A1B2C3D4000000000000000A /* PBXTargetDependency */,
+				A1B2C3D4000000000000000B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D13C97673050010600B7EAAC /* Animora */,
+				A1B2C3D4000000000000000C /* Shared */,
 			);
 			name = Animora;
 			packageProductDependencies = (
@@ -163,6 +260,52 @@
 			productReference = D13C977C3050010700B7EAAC /* AnimoraUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A1B2C3D40000000000000001 /* AnimoraWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3D40000000000000017 /* Build configuration list for PBXNativeTarget "AnimoraWidgetExtension" */;
+			buildPhases = (
+				A1B2C3D40000000000000011 /* Sources */,
+				A1B2C3D40000000000000012 /* Frameworks */,
+				A1B2C3D40000000000000013 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1B2C3D4000000000000000D /* AnimoraWidget */,
+				A1B2C3D4000000000000000C /* Shared */,
+			);
+			name = AnimoraWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = AnimoraWidgetExtension;
+			productReference = A1B2C3D40000000000000003 /* AnimoraWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A1B2C3D40000000000000002 /* AnimoraShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3D4000000000000001A /* Build configuration list for PBXNativeTarget "AnimoraShareExtension" */;
+			buildPhases = (
+				A1B2C3D40000000000000014 /* Sources */,
+				A1B2C3D40000000000000015 /* Frameworks */,
+				A1B2C3D40000000000000016 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1B2C3D4000000000000000E /* AnimoraShare */,
+				A1B2C3D4000000000000000C /* Shared */,
+			);
+			name = AnimoraShareExtension;
+			packageProductDependencies = (
+			);
+			productName = AnimoraShareExtension;
+			productReference = A1B2C3D40000000000000004 /* AnimoraShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -185,6 +328,12 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = D13C97643050010600B7EAAC;
 					};
+					A1B2C3D40000000000000001 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					A1B2C3D40000000000000002 = {
+						CreatedOnToolsVersion = 26.2;
+					};
 				};
 			};
 			buildConfigurationList = D13C97603050010600B7EAAC /* Build configuration list for PBXProject "Animora" */;
@@ -204,6 +353,8 @@
 				D13C97643050010600B7EAAC /* Animora */,
 				D13C97713050010700B7EAAC /* AnimoraTests */,
 				D13C977B3050010700B7EAAC /* AnimoraUITests */,
+				A1B2C3D40000000000000001 /* AnimoraWidgetExtension */,
+				A1B2C3D40000000000000002 /* AnimoraShareExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -224,6 +375,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D13C977A3050010700B7EAAC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D40000000000000013 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D40000000000000016 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -254,6 +419,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1B2C3D40000000000000011 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B2C3D40000000000000014 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -266,6 +445,16 @@
 			isa = PBXTargetDependency;
 			target = D13C97643050010600B7EAAC /* Animora */;
 			targetProxy = D13C977D3050010700B7EAAC /* PBXContainerItemProxy */;
+		};
+		A1B2C3D4000000000000000A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1B2C3D40000000000000001 /* AnimoraWidgetExtension */;
+			targetProxy = A1B2C3D40000000000000008 /* PBXContainerItemProxy */;
+		};
+		A1B2C3D4000000000000000B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1B2C3D40000000000000002 /* AnimoraShareExtension */;
+			targetProxy = A1B2C3D40000000000000009 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -394,6 +583,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Animora/Animora.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -425,6 +615,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Animora/Animora.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -466,7 +657,6 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AnimoraTests/AnimoraTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -490,7 +680,6 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AnimoraTests/AnimoraTests-Bridging-Header.h";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -536,6 +725,130 @@
 			};
 			name = Release;
 		};
+		A1B2C3D40000000000000018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AnimoraWidget/AnimoraWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AnimoraWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Animora";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iOSdD.Animora.AnimoraWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1B2C3D40000000000000019 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AnimoraWidget/AnimoraWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AnimoraWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Animora";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iOSdD.Animora.AnimoraWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A1B2C3D4000000000000001B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AnimoraShare/AnimoraShare.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AnimoraShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Animora";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iOSdD.Animora.AnimoraShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1B2C3D4000000000000001C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AnimoraShare/AnimoraShare.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AnimoraShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Animora";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iOSdD.Animora.AnimoraShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -571,6 +884,24 @@
 			buildConfigurations = (
 				D13C978D3050010700B7EAAC /* Debug */,
 				D13C978E3050010700B7EAAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B2C3D40000000000000017 /* Build configuration list for PBXNativeTarget "AnimoraWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D40000000000000018 /* Debug */,
+				A1B2C3D40000000000000019 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B2C3D4000000000000001A /* Build configuration list for PBXNativeTarget "AnimoraShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D4000000000000001B /* Debug */,
+				A1B2C3D4000000000000001C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
