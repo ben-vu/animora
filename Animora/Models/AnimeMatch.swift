@@ -35,6 +35,10 @@ struct AnimeMatch: Identifiable, Hashable {
     /// The reasons shown under the title.
     let reasons: [String]
 
+    /// Who sent it, if this came from a friend's pick. `nil` for everything that came
+    /// straight from the catalogue.
+    var friendName: String? = nil
+
     /// `Identifiable` needs an `id`, and the anime's own id is already unique, so
     /// there is no point inventing a second one.
     var id: Int { anime.id }
