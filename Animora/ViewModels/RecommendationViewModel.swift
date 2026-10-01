@@ -33,23 +33,34 @@ class RecommendationViewModel: ObservableObject {
     /// The anime the viewer settled on.
     @Published var chosenMatch: AnimeMatch? = nil
 
+    /// Whether a search is running. Searching the catalogue takes a second or two now
+    /// that it goes over the internet, so the button needs to show that something is
+    /// happening, and must not be tapped twice.
+    @Published private(set) var isSearching = false
+
     private let findRecommendations: FindAnimeRecommendationsUseCase
     private let markAsAlreadyWatched: MarkAsAlreadyWatchedUseCase
     private let chooseAnime: ChooseAnimeUseCase
 
-    /// The repository is passed in from outside rather than created in here, so
-    /// `ContentView` decides what the app runs on and tests can hand in a fake.
+    /// The repositories are passed in from outside rather than created in here, so
+    /// `ContentView` decides what the app runs on and tests or previews can hand in
+    /// in-memory ones.
     init(repository: AnimeRepository,
-         watchHistory: WatchHistoryRepository = InMemoryWatchHistoryRepository()) {
+         watchHistory: WatchHistoryRepository = InMemoryWatchHistoryRepository(),
+         watchlist: WatchlistRepository = InMemoryWatchlistRepository(),
+         friendPicks: FriendPickRepository = InMemoryFriendPickRepository()) {
         self.findRecommendations = FindAnimeRecommendationsUseCase(
             repository: repository,
-            watchHistory: watchHistory
+            watchHistory: watchHistory,
+            watchlist: watchlist,
+            friendPicks: friendPicks
         )
         self.markAsAlreadyWatched = MarkAsAlreadyWatchedUseCase(
             animeRepository: repository,
-            watchHistory: watchHistory
+            watchHistory: watchHistory,
+            friendPicks: friendPicks
         )
-        self.chooseAnime = ChooseAnimeUseCase()
+        self.chooseAnime = ChooseAnimeUseCase(watchlist: watchlist)
     }
 
     // MARK: - What the screens read
@@ -87,23 +98,31 @@ class RecommendationViewModel: ObservableObject {
 
     /// Runs the search. Returns `true` when there is something to suggest.
     @discardableResult
-    func findAnime() -> Bool {
-        errorMessage = nil
+    func findAnime() async -> Bool {
+        // A second tap while the first search is still running would fire off another
+        // round of requests and eat into the catalogue's rate limit.
+        if isSearching { return false }
 
+        errorMessage = nil
+        isSearching = true
+
+        var foundSomething = false
         do {
-            suggestions = try findRecommendations.execute(preferences: preferences)
-            return true
+            suggestions = try await findRecommendations.execute(preferences: preferences)
+            foundSomething = true
         } catch {
             errorMessage = error.localizedDescription
             suggestions = []
-            return false
         }
+
+        isSearching = false
+        return foundSomething
     }
 
     /// Records that the viewer has seen the current suggestion, and moves to the next.
     ///
     /// The anime is written to the watch history, so it will not come back in this
-    /// search or in any search after it.
+    /// search or in any search after it, even after the app is closed.
     func markCurrentAsAlreadyWatched() {
         guard let current = currentSuggestion else { return }
         errorMessage = nil
@@ -116,7 +135,8 @@ class RecommendationViewModel: ObservableObject {
         }
     }
 
-    /// Records the anime the viewer picked. Returns `true` when it was accepted.
+    /// Records the anime the viewer picked and puts it on their Now watching list.
+    /// Returns `true` when it was accepted.
     @discardableResult
     func chooseCurrent() -> Bool {
         guard let current = currentSuggestion else { return false }

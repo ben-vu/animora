@@ -14,6 +14,7 @@ import SwiftUI
 struct RecommendationRequestView: View {
 
     @EnvironmentObject var viewModel: RecommendationViewModel
+    @EnvironmentObject var friendPicksViewModel: FriendPicksViewModel
     @Binding var path: [ContentView.Route]
 
     /// Two columns of genre buttons.
@@ -112,17 +113,41 @@ struct RecommendationRequestView: View {
                     // We only move to the results screen if there is something to show,
                     // so a failed search leaves the viewer here with the controls they
                     // need to change.
-                    if viewModel.findAnime() {
-                        path.append(.suggestion)
+                    //
+                    // The search goes over the internet now, so it runs in a Task and
+                    // the screen stays usable while it waits.
+                    Task {
+                        if await viewModel.findAnime() {
+                            path.append(.suggestion)
+                        }
                     }
                 } label: {
-                    Text("Suggest me something")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.animoraPurple)
-                        .cornerRadius(12)
+                    HStack(spacing: 10) {
+                        if viewModel.isSearching {
+                            ProgressView()
+                                .tint(.white)
+                            Text("Finding something for you…")
+                        } else {
+                            Text("Suggest me something")
+                        }
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.animoraPurple)
+                    .cornerRadius(12)
+                }
+                .disabled(viewModel.isSearching)
+
+                // Letting the viewer know their friends' picks count. Otherwise a pick
+                // jumping to the top would look like a coincidence.
+                if friendPicksViewModel.readyCount > 0 {
+                    Text("Anything your friends sent that fits this request will be suggested first.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
                 }
             }
             .padding(20)
@@ -135,6 +160,7 @@ struct RecommendationRequestView: View {
 #Preview {
     NavigationStack {
         RecommendationRequestView(path: .constant([]))
-            .environmentObject(RecommendationViewModel(repository: LocalAnimeRepository()))
+            .environmentObject(PreviewData.makeRecommendationViewModel())
+            .environmentObject(PreviewData.makeFriendPicksViewModel())
     }
 }

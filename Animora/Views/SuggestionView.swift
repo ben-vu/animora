@@ -15,7 +15,8 @@ import SwiftUI
 /// this app exists to solve.
 ///
 /// Saying "already seen" writes the anime to the watch history, so it is gone from this
-/// search and from every search after it.
+/// search and from every search after it. Picking it puts it on Now watching, which
+/// is what the Up next widget shows.
 struct SuggestionView: View {
 
     @EnvironmentObject var viewModel: RecommendationViewModel
@@ -42,22 +43,42 @@ struct SuggestionView: View {
     @ViewBuilder
     private func suggestion(for match: AnimeMatch) -> some View {
 
-        Text(match.matchLabel)
-            .font(.caption)
-            .bold()
-            .foregroundColor(.animoraPurple)
+        HStack(alignment: .top, spacing: 14) {
 
-        Text(match.anime.title)
-            .font(.largeTitle)
-            .bold()
+            // The cover matters more than it looks. Someone new to anime often
+            // recognises a show from its poster before they recognise its name.
+            AnimeCoverImage(url: match.anime.imageURL, width: 96, height: 136)
 
-        Text(match.anime.genreSummary)
-            .font(.subheadline)
-            .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(match.matchLabel)
+                    .font(.caption)
+                    .bold()
+                    .foregroundColor(.animoraPurple)
+
+                if let friendName = match.friendName {
+                    Label("From \(friendName)", systemImage: "person.2.fill")
+                        .font(.caption)
+                        .bold()
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.animoraPurple)
+                        .cornerRadius(6)
+                }
+
+                Text(match.anime.title)
+                    .font(.title)
+                    .bold()
+
+                Text(match.anime.genreSummary)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
 
         HStack(spacing: 26) {
             fact(label: "Rating", value: String(format: "★ %.1f", match.anime.score))
-            fact(label: "Episodes", value: "\(match.anime.episodes)")
+            fact(label: "Episodes", value: episodeFact(for: match.anime))
             fact(label: "Total", value: match.anime.commitmentSummary)
             fact(label: "Status", value: match.anime.status.displayName)
         }
@@ -178,6 +199,15 @@ struct SuggestionView: View {
         }
     }
 
+    /// The episode count for the facts row. "TBA" fits in the small space when the
+    /// series hasn't announced how many episodes it will have.
+    private func episodeFact(for anime: Anime) -> String {
+        if let episodes = anime.episodes {
+            return "\(episodes)"
+        }
+        return "TBA"
+    }
+
     private func errorBox(_ message: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Image(systemName: "exclamationmark.circle.fill")
@@ -192,12 +222,18 @@ struct SuggestionView: View {
 }
 
 #Preview {
-    let viewModel = RecommendationViewModel(repository: LocalAnimeRepository())
-    viewModel.preferences.genres = [.action]
-    viewModel.findAnime()
+    let viewModel = RecommendationViewModel(
+        repository: TenraiAnimeRepository(),
+        friendPicks: PreviewData.makeFriendPicks()
+    )
 
+    // With no genre picked, the friend's pick (Frieren) is always suggested first, so
+    // the preview has something to show even though the catalogue search runs for real.
     return NavigationStack {
         SuggestionView(path: .constant([]))
             .environmentObject(viewModel)
+            .task {
+                await viewModel.findAnime()
+            }
     }
 }

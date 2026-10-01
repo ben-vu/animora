@@ -10,8 +10,8 @@ import Foundation
 /// The ways marking an anime as already watched can go wrong.
 ///
 /// The viewer meets both of these on the suggestion screen, the moment they tap
-/// "Already watched, pick another". Neither is their fault, so each message says what
-/// happened and what to press next rather than reporting a failure.
+/// "Already seen it? Show me another one". Neither is their fault, so each message
+/// says what happened and what to press next rather than reporting a failure.
 enum MarkAsAlreadyWatchedError: LocalizedError, Equatable {
 
     /// The anime is not in the catalogue, so there is nothing to record.
@@ -29,24 +29,27 @@ enum MarkAsAlreadyWatchedError: LocalizedError, Equatable {
             return "We can't find that anime any more, so we couldn't add it to your watched list. Go back and pick another recommendation."
 
         case .alreadyMarkedAsWatched(let animeTitle):
-            return "\(animeTitle) is already on your watched list, so we won't suggest it again. Tap Start over for a fresh recommendation."
+            return "\(animeTitle) is already on your watched list, so we won't suggest it again. Tap Change my request for a fresh recommendation."
         }
     }
 }
 
 /// Records that the viewer has already seen an anime, so it is never suggested again.
 ///
-/// This is what happens when the viewer taps
-/// 'Already watched, pick another'. It is how the app learns from a rejected
-/// suggestion instead of offering the same thing over and over.
+/// This is what happens when the viewer taps 'Already seen it? Show me another one'.
+/// It is how the app learns from a rejected suggestion instead of offering the same
+/// thing over and over.
 ///
 /// This is the piece that makes Animora feel like it is listening. Without it, a viewer
 /// who has already seen the top result has no way to say so, and every search gives
-/// them the same answer.
+/// them the same answer. Since Assessment 3 the record is saved with Core Data, so it
+/// is remembered after the app is closed too.
 ///
 /// Business rules:
-/// 1. Only an anime that really exists in the catalogue can be recorded. Recording an
-///    id we know nothing about would put a broken row on the watched list.
+/// 1. Only an anime Animora actually knows about can be recorded, meaning one the
+///    catalogue has sent back this session or one a friend's pick was matched to.
+///    Recording an id we know nothing about would put a broken row on the watched
+///    list.
 /// 2. The same anime cannot be recorded twice. A duplicate usually means the viewer
 ///    tapped twice by accident, so the app says so rather than saving two identical
 ///    rows.
@@ -60,6 +63,17 @@ struct MarkAsAlreadyWatchedUseCase {
 
     /// Where the record gets saved.
     let watchHistory: WatchHistoryRepository
+
+    /// Friends' picks are the other place a suggestion can come from.
+    let friendPicks: FriendPickRepository
+
+    init(animeRepository: AnimeRepository,
+         watchHistory: WatchHistoryRepository,
+         friendPicks: FriendPickRepository = InMemoryFriendPickRepository()) {
+        self.animeRepository = animeRepository
+        self.watchHistory = watchHistory
+        self.friendPicks = friendPicks
+    }
 
     /// Marks one anime as watched.
     ///
@@ -81,6 +95,14 @@ struct MarkAsAlreadyWatchedUseCase {
             }
         }
 
+        if foundAnime == nil {
+            for pick in friendPicks.picks {
+                if let anime = pick.anime, anime.id == animeID {
+                    foundAnime = anime
+                }
+            }
+        }
+
         guard let anime = foundAnime else {
             throw MarkAsAlreadyWatchedError.animeNotInCatalogue
         }
@@ -93,10 +115,11 @@ struct MarkAsAlreadyWatchedUseCase {
         let record = WatchedAnimeRecord(
             animeID: anime.id,
             animeTitle: anime.title,
-            markedAt: date
+            markedAt: date,
+            reason: .seenBeforeAnimora
         )
 
-        watchHistory.add(record)
+        watchHistory.add(record, anime: anime)
         return record
     }
 }
