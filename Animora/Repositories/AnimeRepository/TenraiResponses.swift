@@ -60,3 +60,14 @@ struct TenraiImageLinks: Decodable {
     let imageUrl: String?
     let largeImageUrl: String?
 }
+
+/// The reply from `/anime/{id}/streaming`.
+struct TenraiStreamingResponse: Decodable {
+    let data: [TenraiStreamingLink]
+}
+
+/// One streaming service, like `{"name": "Crunchyroll", "url": "http://..."}`.
+struct TenraiStreamingLink: Decodable {
+    let name: String
+    let url: String
+}

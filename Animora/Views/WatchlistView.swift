@@ -21,6 +21,9 @@ struct WatchlistView: View {
     @EnvironmentObject var watchlistViewModel: WatchlistViewModel
     @Binding var path: [ContentView.Route]
 
+    /// The anime whose Where to watch sheet is open, if any.
+    @State private var whereToWatchAnime: Anime? = nil
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -74,6 +77,9 @@ struct WatchlistView: View {
             // Pull down to pick up anything ticked off on the widget.
             watchlistViewModel.refresh()
         }
+        .sheet(item: $whereToWatchAnime) { anime in
+            WhereToWatchSheet(anime: anime)
+        }
     }
 
     // MARK: - One show
@@ -104,17 +110,32 @@ struct WatchlistView: View {
                     .tint(.animoraPurple)
             }
 
-            Button {
-                watchlistViewModel.logEpisode(for: entry)
-            } label: {
-                Label("Watched episode \(entry.nextEpisodeNumber)", systemImage: "checkmark")
-                    .font(.subheadline)
-                    .bold()
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(10)
-                    .background(Color.animoraPurple)
-                    .cornerRadius(10)
+            HStack(spacing: 10) {
+                Button {
+                    watchlistViewModel.logEpisode(for: entry)
+                } label: {
+                    Label("Watched episode \(entry.nextEpisodeNumber)", systemImage: "checkmark")
+                        .font(.subheadline)
+                        .bold()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(10)
+                        .background(Color.animoraPurple)
+                        .cornerRadius(10)
+                }
+
+                Button {
+                    whereToWatchAnime = entry.anime
+                } label: {
+                    Label("Watch", systemImage: "play.tv")
+                        .font(.subheadline)
+                        .bold()
+                        .foregroundColor(.animoraPurple)
+                        .padding(10)
+                        .background(Color.animoraSoft)
+                        .cornerRadius(10)
+                }
+                .accessibilityLabel("Where to watch \(entry.anime.title)")
             }
         }
         .padding(14)

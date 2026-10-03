@@ -21,6 +21,9 @@ struct ChosenView: View {
     @EnvironmentObject var viewModel: RecommendationViewModel
     @Binding var path: [ContentView.Route]
 
+    /// Whether the Where to watch sheet is open.
+    @State private var showingWhereToWatch = false
+
     var body: some View {
         VStack(spacing: 18) {
 
@@ -55,6 +58,22 @@ struct ChosenView: View {
 
             Spacer()
 
+            // The most useful next step is actually starting episode 1, so this is
+            // the main button.
+            if viewModel.chosenMatch != nil {
+                Button {
+                    showingWhereToWatch = true
+                } label: {
+                    Label("Where to watch", systemImage: "play.tv.fill")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.animoraPurple)
+                        .cornerRadius(12)
+                }
+            }
+
             Button {
                 // Straight to the list, with the home screen underneath it so Back
                 // goes somewhere sensible.
@@ -63,10 +82,10 @@ struct ChosenView: View {
             } label: {
                 Text("See Now watching")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.animoraPurple)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.animoraPurple)
+                    .background(Color.animoraSoft)
                     .cornerRadius(12)
             }
 
@@ -78,10 +97,9 @@ struct ChosenView: View {
             } label: {
                 Text("Back to home")
                     .font(.headline)
-                    .foregroundColor(.animoraPurple)
+                    .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.animoraSoft)
+                    .padding(.vertical, 8)
                     .cornerRadius(12)
             }
         }
@@ -91,6 +109,11 @@ struct ChosenView: View {
         // There is nothing to go back to. The suggestion has been chosen, so the
         // suggestion screen would only offer the same choice again.
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showingWhereToWatch) {
+            if let chosen = viewModel.chosenMatch {
+                WhereToWatchSheet(anime: chosen.anime)
+            }
+        }
     }
 }
 

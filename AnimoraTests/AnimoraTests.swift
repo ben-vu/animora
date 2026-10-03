@@ -105,6 +105,18 @@ class TestAnimeRepository: AnimeRepository {
         }
         return nil
     }
+
+    /// What the fake catalogue says each anime is streaming on. Empty unless a test
+    /// sets it.
+    var streaming: [Int: [WatchOption]] = [:]
+
+    func streamingLinks(forAnimeID id: Int) async throws -> [WatchOption] {
+        requestCount += 1
+        if let failure = failure {
+            throw failure
+        }
+        return streaming[id] ?? []
+    }
 }
 
 /// Builds a request without repeating the same lines in every test.
@@ -761,5 +773,83 @@ struct TenraiCatalogueReadingTests {
         #expect(throws: AnimeCatalogueError.unavailable) {
             try TenraiAnimeRepository.decodeAnimeList(from: Data("not json".utf8))
         }
+    }
+}
+
+// MARK: - Where to watch
+
+@MainActor
+struct FindWhereToWatchUseCaseTests {
+
+    private func option(_ name: String, _ address: String) -> WatchOption {
+        WatchOption(serviceName: name, link: URL(string: address)!)
+    }
+
+    @Test func whereToWatch_putsAnimeServicesFirst_andUpgradesOldLinks() async throws {
+        // This is how the catalogue really lists Cowboy Bebop: Netflix first, and
+        // Crunchyroll with an old http address.
+        let catalogue = TestAnimeRepository()
+        catalogue.streaming[TestAnimeRepository.shortAction.id] = [
+            option("Netflix", "https://www.netflix.com/title/80001305"),
+            option("Crunchyroll", "http://www.crunchyroll.com/series-271225")
+        ]
+        let useCase = FindWhereToWatchUseCase(catalogue: catalogue)
+
+        let options = try await useCase.execute(for: TestAnimeRepository.shortAction)
+
+        #expect(options.map { $0.serviceName } == ["Crunchyroll", "Netflix"])
+        #expect(options[0].link.absoluteString == "https://www.crunchyroll.com/series-271225")
+        #expect(options[0].buttonTitle == "Watch on Crunchyroll")
+    }
+
+    @Test func whereToWatch_showsEachServiceOnce_andDropsNonWebLinks() async throws {
+        let catalogue = TestAnimeRepository()
+        catalogue.streaming[TestAnimeRepository.shortAction.id] = [
+            option("Netflix", "https://www.netflix.com/title/1"),
+            option("netflix", "https://www.netflix.com/title/2"),
+            option("Some App", "someapp://anime/1")
+        ]
+        let useCase = FindWhereToWatchUseCase(catalogue: catalogue)
+
+        let options = try await useCase.execute(for: TestAnimeRepository.shortAction)
+
+        #expect(options.count == 1)
+        #expect(options[0].link.absoluteString == "https://www.netflix.com/title/1")
+    }
+
+    @Test func whereToWatch_offersACrunchyrollSearch_whenNothingIsListed() async throws {
+        // A dead end is the worst outcome for a newcomer who has just chosen a show.
+        let useCase = FindWhereToWatchUseCase(catalogue: TestAnimeRepository())
+
+        let options = try await useCase.execute(for: TestAnimeRepository.romanceOnly)
+
+        #expect(options.count == 1)
+        #expect(options[0].isSearch)
+        #expect(options[0].link.absoluteString == "https://www.crunchyroll.com/search?q=Romance%20Only%20Show")
+        #expect(options[0].buttonTitle == "Search for it on Crunchyroll")
+    }
+
+    @Test func whereToWatch_tellsViewerToCheckConnection_whenOffline() async {
+        let catalogue = TestAnimeRepository()
+        catalogue.failure = .noConnection
+        let useCase = FindWhereToWatchUseCase(catalogue: catalogue)
+
+        await #expect(throws: FindWhereToWatchError.noConnection) {
+            try await useCase.execute(for: TestAnimeRepository.shortAction)
+        }
+    }
+
+    @Test func streamingReply_isReadIntoWatchOptions() throws {
+        let reply = """
+        { "data": [
+            { "name": "Crunchyroll", "url": "http://www.crunchyroll.com/series-271225" },
+            { "name": "Netflix", "url": "https://www.netflix.com/title/80001305" }
+        ] }
+        """
+
+        let options = try TenraiAnimeRepository.decodeStreamingLinks(from: Data(reply.utf8))
+
+        #expect(options.count == 2)
+        #expect(options[1].serviceName == "Netflix")
     }
 }
