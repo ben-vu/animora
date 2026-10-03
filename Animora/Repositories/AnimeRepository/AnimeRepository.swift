@@ -37,6 +37,12 @@ protocol AnimeRepository {
 
     /// Looks up the best match for a title a friend sent, or returns `nil`.
     func searchAnime(titled title: String) async throws -> Anime?
+
+    /// The streaming services the catalogue lists for one anime, exactly as listed.
+    ///
+    /// The list can be empty, and the links can be old `http` ones. Tidying them up is
+    /// `FindWhereToWatchUseCase`'s job, not the repository's.
+    func streamingLinks(forAnimeID id: Int) async throws -> [WatchOption]
 }
 
 /// The ways fetching from the catalogue can go wrong.

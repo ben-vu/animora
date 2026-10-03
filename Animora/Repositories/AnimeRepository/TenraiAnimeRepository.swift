@@ -142,6 +142,19 @@ class TenraiAnimeRepository: AnimeRepository {
         return best
     }
 
+    func streamingLinks(forAnimeID id: Int) async throws -> [WatchOption] {
+        guard let address = URL(string: "\(TenraiAnimeRepository.baseAddress)/anime/\(id)/streaming") else {
+            return []
+        }
+
+        // A 404 just means the catalogue has nothing for this anime.
+        guard let data = try await fetch(address) else {
+            return []
+        }
+
+        return try TenraiAnimeRepository.decodeStreamingLinks(from: data)
+    }
+
     // MARK: - Talking to the API
 
     /// Builds an address like
@@ -262,6 +275,28 @@ class TenraiAnimeRepository: AnimeRepository {
             }
         }
         return list
+    }
+
+    /// Reads the list of streaming services for one anime.
+    ///
+    /// The reply looks like `{"data": [{"name": "Crunchyroll", "url": "http://..."}]}`.
+    /// Entries without a readable address are skipped.
+    static func decodeStreamingLinks(from data: Data) throws -> [WatchOption] {
+        let response: TenraiStreamingResponse
+        do {
+            response = try makeDecoder().decode(TenraiStreamingResponse.self, from: data)
+        } catch {
+            print("Couldn't read the streaming links from Tenrai: \(error)")
+            throw AnimeCatalogueError.unavailable
+        }
+
+        var options: [WatchOption] = []
+        for item in response.data {
+            if let link = URL(string: item.url) {
+                options.append(WatchOption(serviceName: item.name, link: link))
+            }
+        }
+        return options
     }
 
     /// Turns one catalogue entry into an `Anime`, or `nil` if it is something Animora
