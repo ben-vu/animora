@@ -1,6 +1,6 @@
 # Animora
 
-A personal anime recommendation app for iOS that suggests one anime at a time based on what the viewer is in the mood for, explains why each suggestion was made, and then helps them actually keep watching it. This app is designed for the iPhone running iOS 27 or higher.
+A personal anime recommendation app for iOS that suggests one anime at a time based on what the viewer is in the mood for, explains why each suggestion was made, and then helps them actually keep watching it. This app is designed for the iPhone running iOS 26.2 or higher.
 
 You can find all version control and commit history for Animora in this [GitHub repository](https://github.com/ben-vu/animora).
 
@@ -125,7 +125,7 @@ The app (`iOSdD.Animora`), the widget (`iOSdD.Animora.AnimoraWidget`) and the sh
 
 ## Dependencies
 
-* Swift/SwiftUI and iOS 27+ language features
+* Swift/SwiftUI and iOS 26.2+ language features
 * Core Data, for persistence
 * WidgetKit and App Intents, for the widget
 * Combine framework (Swift), for `ObservableObject` in the ViewModel layer
@@ -136,13 +136,13 @@ There are no third-party packages.
 
 ## Minimum Deployment
 
-The minimum deployment of this project is iOS 27. It needs **Xcode 27 or later**.
+The minimum deployment target of this project is iOS 26.2 (set for the app, widget and share extension targets), so it runs on iOS 26.2 and on the newly released iOS 27. It needs **Xcode 26 or later**.
 
 ## Setup
 
-1. Clone the repository and open `Animora.xcodeproj` in Xcode 27 or later.
+1. Clone the repository and open `Animora.xcodeproj` in Xcode 26 or later.
 2. For each of the three targets (**Animora**, **AnimoraWidgetExtension**, **AnimoraShareExtension**), open **Signing & Capabilities**, choose your **Team**, and make sure the **App Groups** capability shows `group.iOSdD.Animora` ticked. If Xcode says the group is taken, change the bundle id prefix and the group to your own, and update `AnimoraDatabase.appGroupID` to match.
-3. Select an iPhone simulator running iOS 27 or higher and press Run (`⌘R`). The simulator needs an internet connection for suggestions.
+3. Select an iPhone simulator running iOS 26.2 or higher and press Run (`⌘R`). The simulator needs an internet connection for suggestions.
 4. To try the widget, long-press the Home Screen, tap **Edit → Add Widget**, and search for **Animora**.
 5. To try the share extension, open a MyAnimeList anime page in Safari (for example `https://myanimelist.net/anime/52991`), tap Share, then **Animora**. If Animora isn't in the row, tap **More** and turn it on.
 6. To run the unit tests, press `⌘U`. All 47 tests use in-memory mock repositories and hand-written JSON, so they pass without a network connection and never touch Core Data.
